@@ -55,29 +55,35 @@ def get_feed_data():
 	rss = RSS_FEED_URL + urlencode(params)
 	feeds = feedparser.parse(rss)
 
-	
-	last_feed = feeds['entries'][0]
+	for entry in feeds['entries']:
+		url = entry['id']
 
-	project_title = last_feed['title'].split(' - Upwork')[0]
+		if url_is_new(url):
+			urls.append(url)
+			project_title = entry['title'].split(' - Upwork')[0]
 
-	data = {}
-	data['content'] = project_title
-	data['embeds'] = []
+			data = {}
+			data['content'] = f'**{project_title}**\n' #+ 39*' - ' 
+			data['embeds'] = []
 
-	embed = {}
-	embed['color'] = 7330372
-	embed['title'] = project_title
-	embed["url"] = last_feed['id']
-	embed["description"] = html2text(last_feed['summary'])
-	embed['timestamp'] = datetime(*last_feed['published_parsed'][:6]).isoformat()
-	# embed['footer'] = {'text': 'This is a sample footer'}
+			embed = {}
+			embed['color'      ] = 7330372
+			embed['title'      ] = project_title
+			embed['url'        ] = entry['id']
+			embed['description'] = html2text(entry['summary'])
+			embed['timestamp'  ] = datetime(*entry['published_parsed'][:6]).isoformat()
+		  # embed['footer'     ] = {'text': 'This is a sample footer'}
 
-	data['embeds'].append(embed)
+			data['embeds'].append(embed)
 
-	result = requests.post(webhook_url, data=json.dumps(data), headers={"Content-Type": "application/json"})
+			result = requests.post(webhook_url, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
-# if __name__=='__main__':
-	
-# 	while(True):
-# 		webhook(WEBHOOK_URL)
-# 		time.sleep(3)
+			with open('urls.txt', 'a') as f:
+				f.write('{}\n'.format(url))
+
+				
+if __name__ == '__main__':
+	while(True):
+		print(f'[+] Check @{datetime.now().isoformat()}')
+		get_feed_data()
+		time.sleep(60)
