@@ -1,15 +1,9 @@
 import time
 import json
 import requests
-import feedparser
-from urllib.parse import urlencode
 from html2text import html2text
 from datetime import datetime, timedelta
-
-RSS_FEED_URL = 'https://www.upwork.com/ab/feed/topics/rss?'
-
-with open('creds.json', mode='r') as json_file:
-	params = json.load(json_file)
+from rss import RSSManager
 
 with open('webhook.json', mode='r') as json_file:
 	webhook_url = json.load(json_file)['WEBHOOK_URL']
@@ -35,25 +29,11 @@ def url_is_new(url_str):
         return True
 
 
-def webhook(webhook_url):
-	data = {}
-	data['username'] = 'Upwork'
-	data['content'] = 'This is a test message'
-
-	headers={"Content-Type": "application/json"}
-
-	result = requests.post(webhook_url, data=json.dumps(data), headers=headers)
-
-	try:
-		result.raise_for_status()
-	except requests.exceptions.HTTPError as err:
-		print(err)
-	else:
-		print('Message sent successfully')
-
 def get_feed_data():
-	rss = RSS_FEED_URL + urlencode(params)
-	feeds = feedparser.parse(rss)
+	rss = RSSManager()
+	rss.parse_feed()
+
+	feeds = rss.feed
 
 	for entry in feeds['entries']:
 		url = entry['id']
@@ -81,7 +61,7 @@ def get_feed_data():
 			with open('urls.txt', 'a') as f:
 				f.write('{}\n'.format(url))
 
-				
+
 if __name__ == '__main__':
 	while(True):
 		print(f'[+] Check @{datetime.now().isoformat()}')
