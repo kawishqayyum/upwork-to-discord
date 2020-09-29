@@ -1,3 +1,7 @@
+from datetime import datetime
+from html2text import html2text
+
+
 class Job:
     def __init__(self, job_title, job_link, job_published, job_summary):
         self._set_title(job_title)
