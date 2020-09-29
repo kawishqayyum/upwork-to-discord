@@ -6,9 +6,7 @@ from discord_poster import DiscordPoster
 states = StateManager('states')
 upwork_feed = RSSManager()
 upwork_jobs = JobManager(upwork_feed, states)
+dp = DiscordPoster()
 
 jobs = upwork_jobs.get_new_jobs()
-
-dp = DiscordPoster(jobs)
-
-dp.post_all_jobs()
+dp.post_all_jobs(jobs)

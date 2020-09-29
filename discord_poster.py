@@ -2,12 +2,13 @@ import json
 import requests
 
 
-with open('webhook.json', mode='r') as json_file:
-	webhook_url = json.load(json_file)['WEBHOOK_URL']
-
 class DiscordPoster:
-	def __init__(self, jobs):
-		self.jobs = jobs
+	def __init__(self):
+		self._set_webhook()
+
+	def _set_webhook(self):
+		with open('webhook.json', mode='r') as json_file:
+			self.webhook = json.load(json_file)['WEBHOOK_URL']
 
 	def post_job(self, job):
 		data = {}
@@ -24,8 +25,8 @@ class DiscordPoster:
 
 		data['embeds'].append(embed)
 
-		result = requests.post(webhook_url, data=json.dumps(data), headers={"Content-Type": "application/json"})
+		result = requests.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
-	def post_all_jobs(self):
-		for job in self.jobs:
+	def post_all_jobs(self, jobs):
+		for job in jobs:
 			self.post_job(job)
