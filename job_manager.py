@@ -1,4 +1,5 @@
 from job import Job
+from datetime import datetime
 
 
 class JobManager:
@@ -22,9 +23,16 @@ class JobManager:
         else:
             return True
 
+    def print_time(self):
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print()
+        print(" @ ", current_time)
+
     def get_new_jobs(self):
+        self.print_time()
         if not self.new_jobs_available():
-            print('No new jobs available, waiting')
+            print('[-] No new jobs available, waiting...')
             return []
 
         last_link = self.state.get_value('last_link')
@@ -46,7 +54,7 @@ class JobManager:
             if job['link'] != last_link:
                 new_jobs += 1
             else:
-                print('Find new jobs: {}'.format(new_jobs))
+                print(f'[+] Find new jobs: {new_jobs}')
                 self.state.add_value('last_link', jobs[0].link)
                 jobs = jobs[:new_jobs]
                 return Job.create_from_list(jobs)
