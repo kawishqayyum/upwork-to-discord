@@ -1,4 +1,4 @@
-from jobs import JobManager
+from job_manager import JobManager
 from rss import RSSManager
 from states import StateManager
 from discord_poster import DiscordPoster

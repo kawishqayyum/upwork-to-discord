@@ -26,7 +26,6 @@ class DiscordPoster:
 
 		result = requests.post(webhook_url, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
-
 	def post_all_jobs(self):
 		for job in self.jobs:
 			self.post_job(job)
