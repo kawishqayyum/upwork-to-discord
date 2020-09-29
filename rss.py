@@ -1,15 +1,20 @@
 import json
 import feedparser
 from urllib.parse import urlencode
+from os import environ
 
 class RSSManager:
 	def __init__(self):
 		self._set_url()
 		self.feed = None
 
-	def _get_params(self, filename='creds.json'):
-		with open(filename, mode='r') as json_file:
-			return json.load(json_file)
+	def _get_params(self):
+
+		return {
+			'securityToken':environ.get('securityToken'), 
+			'userUid':environ.get('userUid'),
+			'orgUid':environ.get('orgUid')
+		}
 
 
 	def _set_url(self):

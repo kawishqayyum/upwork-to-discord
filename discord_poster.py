@@ -1,14 +1,13 @@
 import json
 import requests
-
+from os import environ
 
 class DiscordPoster:
 	def __init__(self):
 		self._set_webhook()
 
 	def _set_webhook(self):
-		with open('webhook.json', mode='r') as json_file:
-			self.webhook = json.load(json_file)['WEBHOOK_URL']
+		self.webhook = environ.get('WEBHOOK_URL')
 
 	def post_job(self, job):
 		data = {}
