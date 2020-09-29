@@ -21,7 +21,7 @@ class JobManager:
 
     def get_new_jobs(self):
         if not self.new_jobs_available():
-            logging.info('No new jobs available, waiting')
+            print('No new jobs available, waiting')
             return []
 
         last_link = self.state.get_value('last_link')
