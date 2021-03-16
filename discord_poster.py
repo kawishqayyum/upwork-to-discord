@@ -12,7 +12,7 @@ class DiscordPoster:
 	def post_job(self, job):
 		data = {}
 
-		data['content'] = f'**:newspaper: | {job.title}**'
+		data['content'] = f'**:newspaper:   |   {job.title}**'
 		data['embeds' ] = []
 
 		embed = {}
